@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -39,7 +40,12 @@ class KafkaService<T> implements Closeable {
             if (!records.isEmpty()) {
                 System.out.println("Found " + records.count() + " registers");
                 for (var record : records) {
-                    parse.consume(record);
+                    try {
+                        parse.consume(record);
+                    } catch (Exception e) {
+                        // so far, just logging exception for this message
+                        e.printStackTrace();
+                    }
                 }
             }
         }

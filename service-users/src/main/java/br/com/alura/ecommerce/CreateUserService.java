@@ -11,6 +11,18 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 public class CreateUserService {
     private final Connection connection;
 
+    public static void main(String[] args) throws SQLException {
+        var userService = new CreateUserService();
+        try (var service = new KafkaService<>(
+                CreateUserService.class.getSimpleName(),
+                "ECOMMERCE_NEW_ORDER",
+                userService::parse,
+                Order.class,
+                Map.of())) {
+            service.run();
+        }
+    }
+
     CreateUserService() throws SQLException {
         String url = "jdbc:sqlite:target/users_database.db";
         this.connection = DriverManager.getConnection(url);
@@ -23,18 +35,6 @@ public class CreateUserService {
         } catch (SQLException e) {
             // be careful, the sql could be wrong. Be really careful
             e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        var userService = new CreateUserService();
-        try (var service = new KafkaService<>(
-                CreateUserService.class.getSimpleName(),
-                "ECOMMERCE_NEW_ORDER",
-                userService::parse,
-                Order.class,
-                Map.of())) {
-            service.run();
         }
     }
 

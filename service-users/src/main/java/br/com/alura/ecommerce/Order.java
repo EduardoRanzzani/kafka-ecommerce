@@ -8,11 +8,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Order {
-    private final String userId;
     private final String orderId;
     private final BigDecimal amount;
+    private final String email;
 
-    public String getEmail() {
-        return "email@email.com";
-    }
 }
